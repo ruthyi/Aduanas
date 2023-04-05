@@ -56,7 +56,6 @@ const createAgencia = async (req, res) => {
         res.send({ data: registerUser });
 
     } catch (e) {
-        console.log(e);
         if (e.name === 'MongoError' && e.code === 11000) {
             res.status(500);
             res.send({ error: "Nit ya existe" });

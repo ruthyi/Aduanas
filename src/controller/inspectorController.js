@@ -36,8 +36,9 @@ const getInspectorByEmail = async (req, res) => {
 const createInspector = async (req, res) => {
   try {
     //TODO: Datos que envias desde el front (postman)
-    const {  numero_cedula, nombre,  apellido, telefono, direccion,codigo_auditor, state } = req.body;
+    const {  user,numero_cedula, nombre,  apellido, telefono, direccion,codigo_auditor, state } = req.body;
     const registerUser = await inspectorModel.create({
+      user,
       telefono,
       numero_cedula,
       nombre,
@@ -51,7 +52,6 @@ const createInspector = async (req, res) => {
         res.send({ data: registerUser });
 
 } catch (e) {
-  console.log(e); 
   if (e.name === 'MongoError' && e.code === 11000) {
     res.status(500);
     res.send({ error: "Correo Ya Existente" });
