@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 
 const UserScheme = new mongoose.Schema({
-    user_name: {
-        type: String,
-        unique: true,
-        required: true
-    },
+
     failed_login_attempts: {
          type: Number, default: 0 
     },

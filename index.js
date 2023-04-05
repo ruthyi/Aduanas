@@ -13,6 +13,7 @@ app.use(express.json())
 // V1swaggerDoc(app,PORT);
 
 app.use("/Api/v1", todoRoutes );
+
 app.use('*', (req, res) => {
     res.status(404)
     res.send({ error: 'Not found' })

@@ -23,9 +23,9 @@ const getUserById = async (req, res) => {
 };
 
 //Listar usuarios por name
-const getUserByName = async (req, res) => {
+const getUserByEmail = async (req, res) => {
   try {
-    const one = await userModel.find({ name: req.params.user_name });
+    const one = await userModel.find({ name: req.params.email });
     res.status(200).json(one);
   } catch (e) {
     res.status(500);
@@ -37,10 +37,9 @@ const getUserByName = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     //TODO: Datos que envias desde el front (postman)
-    const { user_name, email, password, role, state } = req.body;
+    const { email, password, role, state } = req.body;
     const passwordHash = await encrypt(password); //TODO: (123456)<--- Encriptando!!
     const registerUser = await userModel.create({
-      user_name,
       email,
       role,
       state,
@@ -57,7 +56,7 @@ const createUser = async (req, res) => {
 
 //actualizar usuario
 const updateUser = async (req, res) => {
-  const { user_name, email, role, state } = req.body;
+  const {  email, role, state } = req.body;
   const id = req.params.id;
   userModel.findById(id, (err, user) => {
     if (err) {
@@ -66,7 +65,6 @@ const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "El user no existe" });
     }
-    user.user_name = user_name;
     user.email = email;
     user.role = role;
     user.state = state;
@@ -109,5 +107,5 @@ module.exports = {
   createUser,
   updateUser,
   updateUserState,
-  getUserByName,
+  getUserByEmail,
 };

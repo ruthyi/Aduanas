@@ -6,20 +6,20 @@ const router = express.Router()
 // const {validateUpdateUser}=require('../../validators/userPutAll');
 // const {validateCreatePutUser}=require('../../validators/putUser');
 
-const {getUsers, getUserById, createUser, updateUser, updateUserState, getUserByEmail} = require('../../controller/userController');
+const {getInspector, getInspectorById, createInspector, updateInspector, updateInspectorState, getInspectorByEmail} = require('../../controller/inspectorController');
 
 
 
-router.get('/',getUsers)
+router.get('/',getInspector)
 
-router.get('/:id', getUserById)
+router.get('/:id', getInspectorById)
 
-router.get('/email/:email', getUserByEmail)
+router.get('/email/:email', getInspectorByEmail)
 
-router.post('/',  createUser)
+router.post('/',  createInspector)
 
-router.put('/:id',  updateUser)
+router.put('/:id',  updateInspector)
 
-router.put( '/state/:id', updateUserState)
+router.put( '/state/:id', updateInspectorState)
 
 module.exports = router

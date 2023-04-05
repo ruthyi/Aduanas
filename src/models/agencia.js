@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
 
 const AgenciaScheme = new mongoose.Schema(
   {
-    user: {
-      type: schema.ObjectId,
-      ref: "user",
-      required: true,
-    },
+    // user: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "user",
+    //   required: true,
+    // },
     nit: {
       type: Number,
       required: true,
@@ -16,17 +15,17 @@ const AgenciaScheme = new mongoose.Schema(
     razon_social: {
       type: String,
       required: true,
-      unique: true,
+
     },
     telefono: {
       type: Number,
       required: true,
-      unique: true,
+
     },
     direccion: {
       type: String,
       required: true,
-      unique: true,
+
     },
     fecha_alta: {
       type: Date,

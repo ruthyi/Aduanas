@@ -1,12 +1,12 @@
+
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
+
 
 const InspectorScheme = new mongoose.Schema({
-    user: {
-        type: schema.ObjectId,
-        ref: "user",
-        required: true,
-    },
+//    user: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "user",
+//     },
     numero_cedula: {
          type: Number,
          required: true
@@ -21,15 +21,14 @@ const InspectorScheme = new mongoose.Schema({
     },
     telefono: {
         type: Number,
-        unique: true
+        required: true
     },
     direccion: {
         type: String,
         required: true,
-        unique: true,
     },
     codigo_auditor: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     },
