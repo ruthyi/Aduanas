@@ -37,8 +37,9 @@ const getOneAgenciaByName = async (req, res) => {
 const createAgencia = async (req, res) => {
     try {
         //TODO: Datos que envias desde el front (postman)
-        const { nit, razon_social, telefono, direccion, fecha_alta, fecha_baja, numero_inspectores, ciudad, codigo, state } = req.body;
+        const { user, nit, razon_social, telefono, direccion, fecha_alta, fecha_baja, numero_inspectores, ciudad, codigo, state } = req.body;
         const registerUser = await agenciaModel.create({
+            user,
             nit,
             razon_social,
             telefono,
