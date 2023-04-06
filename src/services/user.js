@@ -1,8 +1,5 @@
 const userModel = require("../models/user");
-const agencia = require('../services/agencia');
-const user = require('../services/user');
-const inspector = require('../services/inspector');
-
+const { encrypt } = require("../helpers/handleBcrypt");
 
 // Listar usuario
 const getUsers = async (req, res) => {
@@ -26,9 +23,9 @@ const getUserById = async (req, res) => {
 };
 
 //Listar usuarios por name
-const getUserByEmail = async (req, res) => {
+const getUserByName = async (req, res) => {
   try {
-    const one = await userModel.find({ name: req.params.email });
+    const one = await userModel.find({ name: req.params.user_name });
     res.status(200).json(one);
   } catch (e) {
     res.status(500);
@@ -36,71 +33,47 @@ const getUserByEmail = async (req, res) => {
   }
 };
 
+const getLookForEmail= async (email, res) => {
+  try {
+    const user = await userModel.find({ email: email});
+    if(!user){
+        return true;
+    }
+} catch (e) {
+    res.status(500)
+    res.send({ error: 'Algo ocurrio' })
+    return "error"
+}
+};
+
+
 //Crear usuario 
 const createUser = async (req, res) => {
-
-
-  const { role, email } = req.body;
-
-  const buscarEmail = await user.getLookForEmail(email, res);
-  console.log(buscarEmail)
-  if (!buscarEmail) {
+  try {
+    //TODO: Datos que envias desde el front (postman)
+    const { user_name, email, password, role, state } = req.body;
+    const passwordHash = await encrypt(password); //TODO: (123456)<--- Encriptando!!
+    const registerUser = await userModel.create({
+      user_name,
+      email,
+      role,
+      state,
+      password: passwordHash,
+    });
+        res.status(200);
+       
+    return registerUser;
+} catch (e) {
     res.status(500);
-    res.send({ error: "Correo existente en la BD" });
-  } else {
-    if (role === "agencia") {
-      const buscarNit = await agencia.getLookForNit(req.body.nit, res);
-      console.log(buscarNit)
-      if (!buscarNit) {
-        res.status(500);
-        res.send({ error: "Nit existente en la BD" });
-      } else {
-        const use = await user.createUser(req, res)
-        console.log(use);
-        if (use != "error") {
-          const idUser = use._id;
-          const agen = await agencia.createAgencia(idUser, req, res)
-          if (agen != "error") {
-            res.send({ data: { use, agen } });
-          }
-        }
-
-      }
-
-
-    } else if (role === "inspector") {
-      const use = await user.createUser(req, res)
-      console.log(use);
-      if (use != "error") {
-        const idUser = use._id;
-        const insp = await inspector.createInspector(idUser, req, res)
-        console.log(insp)
-        if (insp != "error") {
-          res.send({ data: { use, insp } });
-        }
-      }
-
-    } else if (role == "superAdmin") {
-
-      const use = await user.createUser(req, res)
-      if (use != "error") {
-        res.send({ data: { use } });
-      }
-
-    } else {
-      res.status(500);
-      res.send({ error: "Rol Erroneo" });
-    }
-  }
-
-
-
-
+    console.log("errores", e)
+    res.send({ error: "Ha ocurrido un error al registrar el usuario" });
+  return "error"
+}
 };
 
 //actualizar usuario
 const updateUser = async (req, res) => {
-  const { email, role, state } = req.body;
+  const { user_name, email, role, state } = req.body;
   const id = req.params.id;
   userModel.findById(id, (err, user) => {
     if (err) {
@@ -109,6 +82,7 @@ const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "El user no existe" });
     }
+    user.user_name = user_name;
     user.email = email;
     user.role = role;
     user.state = state;
@@ -151,5 +125,6 @@ module.exports = {
   createUser,
   updateUser,
   updateUserState,
-  getUserByEmail,
+  getUserByName,
+  getLookForEmail
 };

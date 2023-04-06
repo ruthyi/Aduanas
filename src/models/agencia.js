@@ -9,8 +9,8 @@ const AgenciaScheme = new mongoose.Schema(
     },
     nit: {
       type: Number,
-      required: true,
       unique: true,
+      required: true,
     },
     razon_social: {
       type: String,

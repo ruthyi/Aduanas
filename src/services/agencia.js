@@ -33,13 +33,27 @@ const getOneAgenciaByName = async (req, res) => {
         res.send({ error: 'Algo ocurrio' })
     }
 };
+
+const getLookForNit= async (nit, res) => {
+    try {
+        const user = await agenciaModel.find({ nit: nit});
+        if(!user){
+            return true;
+        }
+    } catch (e) {
+        res.status(500)
+        res.send({ error: 'Algo ocurrio' })
+        return "error"
+    }
+};
+
 // create new registration in database
-const createAgencia = async (req, res) => {
+const createAgencia = async (idUser, req, res) => {
     try {
         //TODO: Datos que envias desde el front (postman)
-        const { user, nit, razon_social, telefono, direccion, fecha_alta, fecha_baja, numero_inspectores, ciudad, codigo, state } = req.body;
+        const {  nit, razon_social, telefono, direccion, fecha_alta, fecha_baja, numero_inspectores, ciudad, codigo, stateAgent } = req.body;
         const registerUser = await agenciaModel.create({
-            user,
+            user:idUser,
             nit,
             razon_social,
             telefono,
@@ -49,20 +63,13 @@ const createAgencia = async (req, res) => {
             numero_inspectores,
             ciudad,
             codigo,
-            state
+            state:stateAgent
         });
-
         res.status(200);
-        res.send({ data: registerUser });
-
+        return registerUser;
     } catch (e) {
-        if (e.name === 'MongoError' && e.code === 11000) {
-            res.status(500);
-            res.send({ error: "Nit ya existe" });
-        } else {
-            res.status(500);
-            res.send({ error: "Ha ocurrido un error al registrar la agencia" });
-        }
+        res.status(500);
+        return "error"
     }
 };
 
@@ -81,4 +88,4 @@ const updateAgencia = async (req, res) => {
 
 
 
-module.exports = { getAllAgencia, getOneAgenciaById, createAgencia, updateAgencia, getOneAgenciaByName }
+module.exports = { getAllAgencia, getOneAgenciaById, createAgencia, updateAgencia, getOneAgenciaByName, getLookForNit }

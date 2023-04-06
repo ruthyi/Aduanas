@@ -9,6 +9,7 @@ const InspectorScheme = new mongoose.Schema(
     },
     numero_cedula: {
       type: Number,
+      unique: true,
       required: true,
     },
     nombre: {
@@ -29,8 +30,8 @@ const InspectorScheme = new mongoose.Schema(
     },
     codigo_auditor: {
       type: String,
-      required: true,
       unique: true,
+      required: true,
     },
     state: {
       type: Boolean,

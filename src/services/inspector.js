@@ -33,32 +33,25 @@ const getInspectorByEmail = async (req, res) => {
 };
 
 //Crear usuario 
-const createInspector = async (req, res) => {
+const createInspector = async (idUser,req, res) => {
   try {
     //TODO: Datos que envias desde el front (postman)
-    const {  user,numero_cedula, nombre,  apellido, telefono, direccion,codigo_auditor, state } = req.body;
+    const {  numero_cedula, nombre,  apellido, telefono, direccion,codigo_auditor, stateInspect } = req.body;
     const registerUser = await inspectorModel.create({
-      user,
+      user:idUser,
       telefono,
       numero_cedula,
       nombre,
       apellido,
       direccion,
       codigo_auditor,
-      state
+      state:stateInspect
     });
-
         res.status(200);
-        res.send({ data: registerUser });
-
+        return registerUser;
 } catch (e) {
-  if (e.name === 'MongoError' && e.code === 11000) {
-    res.status(500);
-    res.send({ error: "Correo Ya Existente" });
-  } else {
-    res.status(500);
-    res.send({ error: "Ha ocurrido un error al registrar al Inspector" });
-  }
+      res.status(500);
+      return "error"
 }
 };
 
