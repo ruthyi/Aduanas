@@ -39,61 +39,41 @@ const getUserByEmail = async (req, res) => {
 //Crear usuario 
 const createUser = async (req, res) => {
 
-
-  const { role, email } = req.body;
-
-  const buscarEmail = await user.getLookForEmail(email, res);
-  console.log(buscarEmail)
-  if (!buscarEmail) {
-    res.status(500);
-    res.send({ error: "Correo existente en la BD" });
-  } else {
-    if (role === "agencia") {
-      const buscarNit = await agencia.getLookForNit(req.body.nit, res);
-      console.log(buscarNit)
-      if (!buscarNit) {
-        res.status(500);
-        res.send({ error: "Nit existente en la BD" });
-      } else {
-        const use = await user.createUser(req, res)
-        console.log(use);
-        if (use != "error") {
-          const idUser = use._id;
-          const agen = await agencia.createAgencia(idUser, req, res)
-          if (agen != "error") {
-            res.send({ data: { use, agen } });
-          }
-        }
-
+  const { role } = req.body;
+  if (role === "agencia") {
+    const use = await user.createUser(req, res)
+    console.log(use);
+    if (use != "error") {
+      const idUser = use._id;
+      const agen = await agencia.createAgencia(idUser, req, res)
+      if (agen != "error") {
+        res.send({ data: { use, agen } });
       }
-
-
-    } else if (role === "inspector") {
-      const use = await user.createUser(req, res)
-      console.log(use);
-      if (use != "error") {
-        const idUser = use._id;
-        const insp = await inspector.createInspector(idUser, req, res)
-        console.log(insp)
-        if (insp != "error") {
-          res.send({ data: { use, insp } });
-        }
-      }
-
-    } else if (role == "superAdmin") {
-
-      const use = await user.createUser(req, res)
-      if (use != "error") {
-        res.send({ data: { use } });
-      }
-
-    } else {
-      res.status(500);
-      res.send({ error: "Rol Erroneo" });
     }
+
+  } else if (role === "inspector") {
+    const use = await user.createUser(req, res)
+    console.log(use);
+    if (use != "error") {
+      const idUser = use._id;
+      const insp = await inspector.createInspector(idUser, req, res)
+      console.log(insp)
+      if (insp != "error") {
+        res.send({ data: { use, insp } });
+      }
+    }
+
+  } else if (role == "superAdmin") {
+
+    const use = await user.createUser(req, res)
+    if (use != "error") {
+      res.send({ data: { use } });
+    }
+  
+  } else {
+    res.status(500);
+    res.send({ error: "Rol Erroneo" });
   }
-
-
 
 
 };
