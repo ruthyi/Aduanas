@@ -42,7 +42,6 @@ const createUser = async (req, res) => {
   const { role } = req.body;
   if (role === "agencia") {
     const use = await user.createUser(req, res)
-    console.log(use);
     if (use != "error") {
       const idUser = use._id;
       const agen = await agencia.createAgencia(idUser, req, res)
@@ -53,11 +52,9 @@ const createUser = async (req, res) => {
 
   } else if (role === "inspector") {
     const use = await user.createUser(req, res)
-    console.log(use);
     if (use != "error") {
       const idUser = use._id;
       const insp = await inspector.createInspector(idUser, req, res)
-      console.log(insp)
       if (insp != "error") {
         res.send({ data: { use, insp } });
       }

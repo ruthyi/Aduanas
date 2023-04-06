@@ -51,21 +51,18 @@ const getLookForEmail= async (email, res) => {
 const createUser = async (req, res) => {
   try {
     //TODO: Datos que envias desde el front (postman)
-    const { user_name, email, password, role, state } = req.body;
+    const {  email, password, role, state } = req.body;
     const passwordHash = await encrypt(password); //TODO: (123456)<--- Encriptando!!
     const registerUser = await userModel.create({
-      user_name,
       email,
       role,
       state,
       password: passwordHash,
     });
         res.status(200);
-       
-    return registerUser;
+        return registerUser;
 } catch (e) {
     res.status(500);
-    console.log("errores", e)
     res.send({ error: "Ha ocurrido un error al registrar el usuario" });
   return "error"
 }
