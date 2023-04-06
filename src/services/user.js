@@ -116,6 +116,18 @@ const updateUserState = async (req, res) => {
   });
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const resDetail = await userModel.findOneAndRemove({ _id: req.body.id });
+    console.log(resDetail)
+    res.status(200);
+    res.send("Eliminado Exitosamente");
+} catch (e) {
+    res.status(500)
+    res.send({ error: 'Algo ocurrio' })
+}
+}
+
 module.exports = {
   getUsers,
   getUserById,
@@ -123,5 +135,6 @@ module.exports = {
   updateUser,
   updateUserState,
   getUserByName,
-  getLookForEmail
+  getLookForEmail,
+  deleteUser
 };
